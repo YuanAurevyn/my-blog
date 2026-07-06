@@ -1,0 +1,17 @@
+---
+// ArticleCard.astro — 文章卡片
+export interface Props {
+  title: string;
+  date: string;
+  slug: string;
+  excerpt?: string;
+}
+const { title, date, slug, excerpt } = Astro.props;
+---
+<li class="article-item">
+  <a href={`/articles/${slug}/`}>
+    <h2 class="article-title">{title}</h2>
+    <time class="article-date" datetime={date}>{date}</time>
+    {excerpt && <p class="article-excerpt">{excerpt}</p>}
+  </a>
+</li>

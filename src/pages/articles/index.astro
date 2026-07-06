@@ -1,0 +1,26 @@
+---
+// 文章列表页
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+
+const articles = (await getCollection('articles'))
+  .sort((a, b) => (b.data.date || '').localeCompare(a.data.date || ''));
+---
+<BaseLayout title="文章 — My Blog" description="所有文章">
+  <h1>文章</h1>
+  {articles.length > 0 ? (
+    <ul class="article-list">
+      {articles.map((a) => (
+        <ArticleCard
+          title={a.data.title}
+          date={a.data.date || ''}
+          slug={a.id.replace(/\.md$/, '')}
+          excerpt={a.data.excerpt}
+        />
+      ))}
+    </ul>
+  ) : (
+    <p style="color: var(--color-text-muted);">还没有文章。登录 <a href="/admin/">管理后台</a> 创建第一篇吧。</p>
+  )}
+</BaseLayout>

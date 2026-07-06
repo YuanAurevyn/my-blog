@@ -1,0 +1,19 @@
+---
+// 关于我页面
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// Import about page content directly
+const pages = import.meta.glob('../data/pages/about.md', { eager: true }) as any;
+const aboutPath = Object.keys(pages)[0];
+const aboutModule = aboutPath ? pages[aboutPath] : null;
+const Content = aboutModule?.default;
+const title = aboutModule?.frontmatter?.title || '关于我';
+---
+<BaseLayout title="关于我 — My Blog" description="关于我">
+  <h1>{title}</h1>
+  <div class="about-content">
+    {Content ? <Content /> : (
+      <p>在这里写一段自我介绍。登录 <a href="/admin/">管理后台</a> 编辑此页面。</p>
+    )}
+  </div>
+</BaseLayout>

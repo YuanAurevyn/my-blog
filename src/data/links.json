@@ -1,0 +1,17 @@
+[
+  {
+    "name": "设计师朋友 A",
+    "url": "https://example.com",
+    "description": "插画与视觉设计"
+  },
+  {
+    "name": "摄影师 B",
+    "url": "https://example.org",
+    "description": "街头摄影与生活记录"
+  },
+  {
+    "name": "开发者 C",
+    "url": "https://example.dev",
+    "description": "前端开发与设计系统"
+  }
+]

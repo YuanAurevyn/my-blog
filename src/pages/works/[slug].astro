@@ -1,0 +1,35 @@
+---
+// 作品详情页
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const works = await getCollection('works');
+  return works.map((w) => ({
+    params: { slug: w.id.replace(/\.md$/, '') },
+    props: {
+      title: w.data.title,
+      category: w.data.category || '',
+      image: w.data.image || '',
+    },
+  }));
+}
+
+const { title, category, image } = Astro.props;
+const works = await getCollection('works');
+const entry = works.find((w) => w.id.replace(/\.md$/, '') === Astro.params.slug);
+const Content = entry ? await entry.render() : null;
+---
+<BaseLayout title={`${title} — My Blog`}>
+  <article>
+    <header class="article-header">
+      <p class="article-meta">{category || '设计作品'}</p>
+      <h1>{title}</h1>
+    </header>
+    {image && <img src={image} alt={title} class="work-image-large" />}
+    <div class="article-body">
+      {Content && <Content.Content />}
+    </div>
+    <a href="/works/" class="back-link">&larr; 返回作品集</a>
+  </article>
+</BaseLayout>

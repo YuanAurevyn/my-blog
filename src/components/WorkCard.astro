@@ -1,0 +1,16 @@
+---
+// WorkCard.astro — 作品卡片
+export interface Props {
+  title: string;
+  category?: string;
+  slug: string;
+  cover?: string;
+}
+const { title, category, slug, cover } = Astro.props;
+---
+<li class="work-item">
+  <a href={`/works/${slug}/`}>
+    <h2 class="work-title">{title}</h2>
+    <span class="work-meta">{category || '设计作品'}</span>
+  </a>
+</li>

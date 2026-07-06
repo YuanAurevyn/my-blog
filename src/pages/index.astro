@@ -1,0 +1,55 @@
+---
+// pages/index.astro — 首页
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import WorkCard from '../components/WorkCard.astro';
+
+const allArticles = await getCollection('articles');
+const articles = allArticles
+  .map((a) => ({ ...a, slug: a.id.replace(/\.md$/, '') }))
+  .sort((a, b) => (b.data.date || '').localeCompare(a.data.date || ''))
+  .slice(0, 5);
+
+const works = await getCollection('works');
+---
+<BaseLayout title="My Blog" description="个人博客 — 文章 · 设计 · 思考">
+  <p class="page-title">近期文章</p>
+  <ul class="article-list">
+    {articles.length > 0 ? (
+      articles.map((a) => (
+        <ArticleCard
+          title={a.data.title}
+          date={a.data.date || ''}
+          slug={a.slug}
+          excerpt={a.data.excerpt}
+        />
+      ))
+    ) : (
+      <p style="color: var(--color-text-muted);">还没有文章，在管理后台创建第一篇吧。</p>
+    )}
+  </ul>
+  {articles.length > 0 && (
+    <p style="margin-top: var(--spacing-md);">
+      <a href="/articles/">查看全部文章 &rarr;</a>
+    </p>
+  )}
+
+  {works.length > 0 && (
+    <div class="featured-works">
+      <p class="page-title">设计作品</p>
+      <ul class="work-list">
+        {works.slice(0, 3).map((w) => (
+          <WorkCard
+            title={w.data.title}
+            category={w.data.category}
+            slug={w.id.replace(/\.md$/, '')}
+          />
+        ))}
+      </ul>
+      <p style="margin-top: var(--spacing-md);">
+        <a href="/works/">查看全部作品 &rarr;</a>
+      </p>
+    </div>
+  )}
+</BaseLayout>

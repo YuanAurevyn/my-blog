@@ -1,0 +1,24 @@
+---
+// 作品集列表页
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkCard from '../../components/WorkCard.astro';
+
+const works = await getCollection('works');
+---
+<BaseLayout title="设计作品 — My Blog" description="设计作品集">
+  <h1>设计作品</h1>
+  {works.length > 0 ? (
+    <ul class="work-list">
+      {works.map((w) => (
+        <WorkCard
+          title={w.data.title}
+          category={w.data.category}
+          slug={w.id.replace(/\.md$/, '')}
+        />
+      ))}
+    </ul>
+  ) : (
+    <p style="color: var(--color-text-muted);">还没有作品。登录 <a href="/admin/">管理后台</a> 添加第一个作品吧。</p>
+  )}
+</BaseLayout>

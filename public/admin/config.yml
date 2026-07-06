@@ -1,0 +1,69 @@
+backend:
+  name: git-gateway
+  branch: main
+
+# 本地开发模式（在 Netlify 部署后自动忽略）
+local_backend: true
+
+# 管理后台语言
+locale: "zh_Hans"
+
+# 媒体文件存放位置
+media_folder: "public/images"
+public_folder: "/images"
+
+# 内容集合定义
+collections:
+  # --- 文章 ---
+  - name: "articles"
+    label: "文章"
+    label_singular: "文章"
+    folder: "src/content/articles"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - { label: "发布日期", name: "date", widget: "date", default: "" }
+      - { label: "摘要", name: "excerpt", widget: "text", required: false }
+      - { label: "正文", name: "body", widget: "markdown" }
+
+  # --- 设计作品 ---
+  - name: "works"
+    label: "设计作品"
+    label_singular: "设计作品"
+    folder: "src/content/works"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "作品名称", name: "title", widget: "string" }
+      - { label: "分类", name: "category", widget: "string", required: false, hint: "例如：品牌设计、UI Design、插画" }
+      - { label: "日期", name: "date", widget: "date", default: "" }
+      - { label: "封面图片", name: "image", widget: "image", required: false }
+      - { label: "作品描述", name: "body", widget: "markdown" }
+
+  # --- 关于我 ---
+  - name: "about"
+    label: "关于我"
+    files:
+      - name: "about"
+        label: "关于我页面"
+        file: "src/data/pages/about.md"
+        fields:
+          - { label: "页面标题", name: "title", widget: "string", default: "关于我" }
+          - { label: "内容", name: "body", widget: "markdown" }
+
+  # --- 友情链接 ---
+  - name: "links"
+    label: "友情链接"
+    files:
+      - name: "links"
+        label: "友情链接"
+        file: "src/data/links.json"
+        fields:
+          - name: "links"
+            label: "链接列表"
+            widget: "list"
+            fields:
+              - { label: "网站名称", name: "name", widget: "string" }
+              - { label: "网址", name: "url", widget: "string" }
+              - { label: "简介", name: "description", widget: "string", required: false }

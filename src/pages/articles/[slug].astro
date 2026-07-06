@@ -1,0 +1,34 @@
+---
+// 文章详情页
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles.map((a) => ({
+    params: { slug: a.id.replace(/\.md$/, '') },
+    props: {
+      title: a.data.title,
+      date: a.data.date || '',
+    },
+  }));
+}
+
+const { title, date } = Astro.props;
+// Use the entry's Content component via the collection
+const articles = await getCollection('articles');
+const entry = articles.find((a) => a.id.replace(/\.md$/, '') === Astro.params.slug);
+const Content = entry ? await entry.render() : null;
+---
+<BaseLayout title={`${title} — My Blog`}>
+  <article>
+    <header class="article-header">
+      <h1>{title}</h1>
+      {date && <p class="article-meta"><time datetime={date}>{date}</time></p>}
+    </header>
+    <div class="article-body">
+      {Content && <Content.Content />}
+    </div>
+    <a href="/articles/" class="back-link">&larr; 返回文章列表</a>
+  </article>
+</BaseLayout>
