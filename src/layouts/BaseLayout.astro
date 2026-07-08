@@ -27,7 +27,7 @@ const { title, description } = Astro.props;
       </div>
     </main>
     <Footer />
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <script src="/netlify-identity.js"></script>
     <script>
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on("init", (user) => {
@@ -37,6 +37,7 @@ const { title, description } = Astro.props;
             });
           }
         });
+        window.netlifyIdentity.init();
       }
     </script>
   </body>
