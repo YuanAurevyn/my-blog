@@ -1,61 +1,69 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="注册 — My Blog">
-  <h1>创建管理员账号</h1>
-  <p style="margin-bottom: var(--spacing-lg); color: var(--color-text-muted);">
-    点击下方按钮注册管理员账号。
+<BaseLayout title="注册管理员 — My Blog">
+  <h1>注册管理员账号</h1>
+  <p style="margin-bottom: var(--spacing-md); color: var(--color-text-muted);">
+    填写邮箱和密码创建账号。
   </p>
-  <p id="status" style="margin-bottom: 1rem; font-size: 0.9rem;">准备中...</p>
-  <button id="signup-btn" style="
-    padding: 12px 32px;
-    background: #ccc;
-    color: #fff;
-    border: none;
-    font-size: 1rem;
-    cursor: not-allowed;
-    font-family: inherit;
-  " disabled>请稍候...</button>
+
+  <form id="form" style="max-width: 400px;">
+    <div style="margin-bottom: 1rem;">
+      <label style="display: block; margin-bottom: 4px; font-size: 0.9rem;">邮箱</label>
+      <input type="email" id="email" required style="
+        width: 100%; padding: 10px 12px; border: 1px solid #ddd;
+        font-size: 1rem; font-family: inherit; box-sizing: border-box;
+      " placeholder="your@email.com">
+    </div>
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 4px; font-size: 0.9rem;">密码</label>
+      <input type="password" id="password" required minlength="6" style="
+        width: 100%; padding: 10px 12px; border: 1px solid #ddd;
+        font-size: 1rem; font-family: inherit; box-sizing: border-box;
+      " placeholder="至少 6 位">
+    </div>
+    <button type="submit" style="
+      width: 100%; padding: 12px; background: #000; color: #fff;
+      border: none; font-size: 1rem; cursor: pointer; font-family: inherit;
+    ">注册</button>
+  </form>
+
+  <p id="msg" style="margin-top: 1rem;"></p>
+  <p style="margin-top: 2rem; font-size: 0.85rem; color: #aaa;">
+    已有账号？<a href="/admin/" style="color: #555;">去登录 →</a>
+  </p>
 </BaseLayout>
 
 <script>
-(function() {
-  var s = document.getElementById('status');
-  var b = document.getElementById('signup-btn');
+  document.getElementById('form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    var msg = document.getElementById('msg');
+    var email = document.getElementById('email').value;
+    var password = document.getElementById('password').value;
 
-  function ok() {
-    s.textContent = '已就绪';
-    s.style.color = '#333';
-    b.textContent = '注册账号（Sign up）';
-    b.style.background = '#000';
-    b.style.cursor = 'pointer';
-    b.disabled = false;
-    b.onclick = function() {
-      window.netlifyIdentity.open('signup');
-    };
-  }
+    msg.style.color = '#888';
+    msg.textContent = '正在注册...';
 
-  function fail(msg) {
-    s.textContent = msg;
-    s.style.color = 'red';
-  }
-
-  // Already loaded by BaseLayout?
-  if (window.netlifyIdentity) return ok();
-
-  // Wait for it
-  var tries = 0;
-  var timer = setInterval(function() {
-    tries++;
-    if (window.netlifyIdentity) {
-      clearInterval(timer);
-      ok();
-    } else if (tries > 50) {
-      clearInterval(timer);
-      fail('加载超时，请刷新页面再试。若多次失败可能是网络问题。');
+    try {
+      var res = await fetch('/.netlify/identity/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, password: password })
+      });
+      var data = await res.json();
+      if (res.ok) {
+        msg.style.color = 'green';
+        msg.textContent = '注册成功！跳转到管理后台...';
+        setTimeout(function() {
+          location.href = '/admin/';
+        }, 1500);
+      } else {
+        msg.style.color = 'red';
+        msg.textContent = '注册失败：' + (data.msg || data.error || JSON.stringify(data));
+      }
+    } catch (err) {
+      msg.style.color = 'red';
+      msg.textContent = '请求失败：' + err.message + ' （可能是网络问题，请稍后重试）';
     }
-    if (tries === 5) { s.textContent = '仍在加载...'; }
-    if (tries === 15) { s.textContent = '网络较慢，请耐心等待...'; }
-  }, 200);
-})();
+  });
 </script>
