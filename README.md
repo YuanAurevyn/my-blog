@@ -17,6 +17,41 @@
 
 ---
 
+## 💻 本地预览 & 内容编辑（立即可用）
+
+### 预览网站
+
+```bash
+cd C:\Users\11790\my-blog
+npm run dev
+```
+
+浏览器打开 **http://localhost:4321** 查看网站。
+
+### 在管理后台编辑内容
+
+需要**两个**终端窗口：
+
+**窗口 1**（网站）：
+```bash
+cd C:\Users\11790\my-blog
+npm run dev
+```
+
+**窗口 2**（管理后台后端）：
+```bash
+cd C:\Users\11790\my-blog
+npm run cms
+```
+
+然后浏览器打开 **http://localhost:4321/admin/** 进入管理后台。
+
+在管理后台编辑、创建内容 → 保存 → 文件自动更新 → 网站自动刷新！
+
+> 注意：本地编辑功能需要你的电脑已安装 **Git**（https://git-scm.com/download/win）
+
+---
+
 ## 🚀 部署指南（只需做一次）
 
 你需要两个免费账号：**GitHub** + **Netlify**。按照下面步骤操作即可。
