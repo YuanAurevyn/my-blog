@@ -1,0 +1,31 @@
+---
+// 注册页面
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="注册 — My Blog">
+  <h1>创建管理员账号</h1>
+  <p style="margin-bottom: var(--spacing-lg); color: var(--color-text-muted);">
+    注册后即可登录管理后台编辑网站内容。
+  </p>
+  <button id="signup-btn" style="
+    display: inline-block;
+    padding: 12px 32px;
+    background: #000;
+    color: #fff;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    font-family: inherit;
+  ">注册账号（Sign up）</button>
+</BaseLayout>
+
+<script>
+  const btn = document.getElementById('signup-btn');
+  btn.addEventListener('click', () => {
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.open('signup');
+    } else {
+      alert('Netlify Identity 还在加载，请稍后再点一次');
+    }
+  });
+</script>
